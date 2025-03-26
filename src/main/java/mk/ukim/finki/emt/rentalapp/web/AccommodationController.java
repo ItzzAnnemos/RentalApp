@@ -3,8 +3,10 @@ package mk.ukim.finki.emt.rentalapp.web;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import mk.ukim.finki.emt.rentalapp.model.Accommodation;
+import mk.ukim.finki.emt.rentalapp.model.Review;
 import mk.ukim.finki.emt.rentalapp.model.dto.AccommodationDto;
 import mk.ukim.finki.emt.rentalapp.service.AccommodationService;
+import mk.ukim.finki.emt.rentalapp.service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -14,9 +16,12 @@ import java.util.List;
 @RequestMapping("/api/accommodations")
 public class AccommodationController {
     private final AccommodationService accommodationService;
+    private final ReviewService reviewService;
 
-    public AccommodationController(AccommodationService accommodationService) {
+    public AccommodationController(AccommodationService accommodationService,
+                                   ReviewService reviewService) {
         this.accommodationService = accommodationService;
+        this.reviewService = reviewService;
     }
 
     @Operation(summary = "Get all accommodations", description = "Returns a list of all accommodations")
@@ -56,6 +61,18 @@ public class AccommodationController {
         return this.accommodationService.rent(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Average rating for accommodation", description = "Returns the average of the ratings of an accommodation.")
+    @GetMapping("/{id}/average")
+    public Double getAverageRating(@PathVariable Long id) {
+        return this.reviewService.getAverageScoreForAccommodation(id);
+    }
+
+    @Operation(summary = "Get all reviews for accommodation", description = "Returns a list of all the reviews for the specific accommodation")
+    @GetMapping("/{id}/reviews")
+    public List<Review> getReviewsForAccommodation(@PathVariable Long id) {
+        return this.reviewService.findAllByAccommodationId(id);
     }
 
     @Operation(summary = "Delete an accommodation", description = "Removes an accommodation from the system.")
