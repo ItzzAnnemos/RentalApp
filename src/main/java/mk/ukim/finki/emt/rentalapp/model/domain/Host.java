@@ -18,7 +18,7 @@ public class Host {
     private Country country;
 
     @OneToOne
-    @JoinColumn(name = "user_id")  // Foreign key to User
+    @JoinColumn(name = "user_username")  // Foreign key to User
     private User user;
 
     public Host() {

@@ -6,7 +6,6 @@ import mk.ukim.finki.emt.rentalapp.model.domain.Country;
 import mk.ukim.finki.emt.rentalapp.service.application.HostApplicationService;
 import mk.ukim.finki.emt.rentalapp.service.domain.CountryService;
 import mk.ukim.finki.emt.rentalapp.service.domain.HostService;
-import mk.ukim.finki.emt.rentalapp.service.domain.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,14 +16,11 @@ import java.util.stream.Collectors;
 public class HostApplicationServiceImpl implements HostApplicationService {
     private final HostService hostService;
     private final CountryService countryService;
-    private final UserService userService;
 
     public HostApplicationServiceImpl(HostService hostService,
-                                      CountryService countryService,
-                                      UserService userService) {
+                                      CountryService countryService) {
         this.hostService = hostService;
         this.countryService = countryService;
-        this.userService = userService;
     }
 
     @Override
