@@ -1,15 +1,11 @@
 package mk.ukim.finki.emt.rentalapp.config;
 
 import jakarta.annotation.PostConstruct;
-import mk.ukim.finki.emt.rentalapp.model.Accommodation;
-import mk.ukim.finki.emt.rentalapp.model.Country;
-import mk.ukim.finki.emt.rentalapp.model.Host;
-import mk.ukim.finki.emt.rentalapp.model.Review;
+import mk.ukim.finki.emt.rentalapp.model.domain.*;
 import mk.ukim.finki.emt.rentalapp.model.enumerations.Category;
-import mk.ukim.finki.emt.rentalapp.repository.AccommodationRepository;
-import mk.ukim.finki.emt.rentalapp.repository.CountryRepository;
-import mk.ukim.finki.emt.rentalapp.repository.HostRepository;
-import mk.ukim.finki.emt.rentalapp.repository.ReviewRepository;
+import mk.ukim.finki.emt.rentalapp.model.enumerations.Role;
+import mk.ukim.finki.emt.rentalapp.repository.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,20 +17,27 @@ public class DataInitializer {
     public static List<Host> hosts;
     public static List<Review> reviews;
     public static List<Accommodation> accommodations;
+    public static List<User> users;
 
     private final AccommodationRepository accommodationRepository;
     private final CountryRepository countryRepository;
     private final HostRepository hostRepository;
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(AccommodationRepository accommodationRepository,
                            CountryRepository countryRepository,
                            HostRepository hostRepository,
-                           ReviewRepository reviewRepository) {
+                           ReviewRepository reviewRepository,
+                           UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
         this.accommodationRepository = accommodationRepository;
         this.countryRepository = countryRepository;
         this.hostRepository = hostRepository;
         this.reviewRepository = reviewRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -47,6 +50,32 @@ public class DataInitializer {
             this.countryRepository.saveAll(countries);
         } else {
             countries = countryRepository.findAll();
+        }
+
+        users = new ArrayList<>();
+        if (this.userRepository.count() == 0) {
+            User hostUser1 = new User("nikola.serafimov", passwordEncoder.encode("ns"), "Nikola", "Serafimov", Role.ROLE_HOST);
+            User hostUser2 = new User("felix.schneider", passwordEncoder.encode("fs"), "Felix", "Schneider", Role.ROLE_HOST);
+            User hostUser3 = new User("john.matthews", passwordEncoder.encode("jm"), "John", "Matthews", Role.ROLE_HOST);
+            User regularUser = new User("user", passwordEncoder.encode("user"), "User", "", Role.ROLE_USER);
+            users = List.of(hostUser1, hostUser2, hostUser3, regularUser);
+            this.userRepository.saveAll(users);
+
+            Host host1 = new Host("Nikola", "Serafimov", countries.get(0));
+            host1.setUser(hostUser1);
+            hostUser1.setHost(host1);
+
+            Host host2 = new Host("Felix", "Schneider", countries.get(1));
+            host2.setUser(hostUser2);
+            hostUser2.setHost(host2);
+
+            Host host3 = new Host("John", "Matthews", countries.get(2));
+            host3.setUser(hostUser3);
+            hostUser3.setHost(host3);
+
+            hostRepository.saveAll(List.of(host1, host2, host3));
+        } else {
+            users = userRepository.findAll();
         }
 
         hosts = new ArrayList<>();

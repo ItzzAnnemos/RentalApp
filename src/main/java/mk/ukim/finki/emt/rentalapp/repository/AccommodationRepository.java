@@ -1,6 +1,6 @@
 package mk.ukim.finki.emt.rentalapp.repository;
 
-import mk.ukim.finki.emt.rentalapp.model.Accommodation;
+import mk.ukim.finki.emt.rentalapp.model.domain.Accommodation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
