@@ -4,6 +4,7 @@ import mk.ukim.finki.emt.rentalapp.model.domain.Accommodation;
 import mk.ukim.finki.emt.rentalapp.repository.AccommodationRepository;
 import mk.ukim.finki.emt.rentalapp.service.domain.AccommodationService;
 import mk.ukim.finki.emt.rentalapp.service.domain.HostService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
-    public List<Accommodation> findAll() {
-        return this.accommodationRepository.findAll();
+    public List<Accommodation> findAll(Specification<Accommodation> filter) {
+        return this.accommodationRepository.findAll(filter);
     }
 
     @Override

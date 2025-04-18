@@ -2,10 +2,14 @@ package mk.ukim.finki.emt.rentalapp.service.application.impl;
 
 import mk.ukim.finki.emt.rentalapp.dto.CreateAccommodationDto;
 import mk.ukim.finki.emt.rentalapp.dto.DisplayAccommodationDto;
+import mk.ukim.finki.emt.rentalapp.model.domain.Accommodation;
 import mk.ukim.finki.emt.rentalapp.model.domain.Host;
+import mk.ukim.finki.emt.rentalapp.model.enumerations.Category;
 import mk.ukim.finki.emt.rentalapp.service.application.AccommodationApplicationService;
 import mk.ukim.finki.emt.rentalapp.service.domain.AccommodationService;
 import mk.ukim.finki.emt.rentalapp.service.domain.HostService;
+import mk.ukim.finki.emt.rentalapp.service.specifications.FieldFilterSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +28,34 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     }
 
     @Override
-    public List<DisplayAccommodationDto> findAll() {
-        return accommodationService.findAll().stream()
+    public List<DisplayAccommodationDto> findAll(String name,
+                                                 Category category,
+                                                 Long hostId,
+                                                 Integer numRooms,
+                                                 Boolean isRented) {
+        Specification<Accommodation> spec = Specification.where(null);
+
+        if (name != null) {
+            spec = spec.and(FieldFilterSpecification.filterContainsText(Accommodation.class, "name", name));
+        }
+
+        if (category != null) {
+            spec = spec.and(FieldFilterSpecification.filterEquals(Accommodation.class, "category", category.name()));
+        }
+
+        if (hostId != null) {
+            spec = spec.and(FieldFilterSpecification.filterEquals(Accommodation.class, "host.id", hostId));
+        }
+
+        if (numRooms != null) {
+            spec = spec.and(FieldFilterSpecification.filterEquals(Accommodation.class, "numRooms", numRooms.longValue()));
+        }
+
+        if (isRented != null) {
+            spec = spec.and(FieldFilterSpecification.filterEqualsV(Accommodation.class, "isRented", isRented));
+        }
+
+        return accommodationService.findAll(spec).stream()
                 .map(DisplayAccommodationDto::from)
                 .collect(Collectors.toList());
     }

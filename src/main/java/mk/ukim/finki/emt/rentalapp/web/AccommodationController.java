@@ -5,9 +5,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import mk.ukim.finki.emt.rentalapp.dto.CreateAccommodationDto;
 import mk.ukim.finki.emt.rentalapp.dto.DisplayAccommodationDto;
 import mk.ukim.finki.emt.rentalapp.dto.DisplayReviewDto;
+import mk.ukim.finki.emt.rentalapp.model.enumerations.Category;
 import mk.ukim.finki.emt.rentalapp.service.application.AccommodationApplicationService;
 import mk.ukim.finki.emt.rentalapp.service.application.ReviewApplicationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,9 +29,14 @@ public class AccommodationController {
 
 
     @Operation(summary = "Get all accommodations", description = "Returns a list of all accommodations")
-    @GetMapping
-    public List<DisplayAccommodationDto> findAll() {
-        return this.accommodationApplicationService.findAll();
+    @GetMapping()
+    public List<DisplayAccommodationDto> findAll(@RequestParam(required = false) String name,
+                                                 @RequestParam(required = false) Category category,
+                                                 @RequestParam(required = false) Long hostId,
+                                                 @RequestParam(required = false) Integer numRooms,
+                                                 @RequestParam(defaultValue = "false") Boolean isRented
+    ) {
+        return this.accommodationApplicationService.findAll(name, category, hostId, numRooms, isRented);
     }
 
     @Operation(summary = "Find accommodation by ID", description = "Returns a specific accommodation by its ID.")
