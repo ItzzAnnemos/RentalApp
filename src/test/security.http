@@ -1,0 +1,17 @@
+### login sucess
+POST http://localhost:9090/api/login
+Content-Type: application/json
+
+{"username":"nikola.serafimov","password":"ns"}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+        var authHeader = response.headers.valueOf("Authorization");
+        client.global.set("jwt", authHeader);
+    });
+%}
+
+###
+GET http://localhost:9090/api/accommodations
+Authorization: {{jwt}}

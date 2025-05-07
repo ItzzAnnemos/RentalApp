@@ -43,13 +43,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String username, String password) {
-        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+        if (username == null || username.isEmpty() || password == null || password.isEmpty())
             throw new InvalidArgumentsException();
-        }
-        return userRepository.findByUsernameAndPassword(username, password).orElseThrow(
-                InvalidUserCredentialsException::new);
-
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException(username));
+        if (!passwordEncoder.matches(password, user.getPassword()))
+            throw new InvalidUserCredentialsException();
+        return user;
     }
+
 
     @Override
     public User findByUsername(String username) {

@@ -1,9 +1,10 @@
-package mk.ukim.finki.emt.rentalapp.web;
+package mk.ukim.finki.emt.rentalapp.web.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import mk.ukim.finki.emt.rentalapp.dto.CreateHostDto;
 import mk.ukim.finki.emt.rentalapp.dto.DisplayHostDto;
+import mk.ukim.finki.emt.rentalapp.model.projections.HostProjection;
 import mk.ukim.finki.emt.rentalapp.service.application.HostApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,12 @@ public class HostController {
     @GetMapping
     public List<DisplayHostDto> findAll() {
         return hostApplicationService.findAll();
+    }
+
+    @Operation(summary = "Get names and surnames", description = "Returns a list of projections containing names and surnames")
+    @GetMapping("/names")
+    public List<HostProjection> getProjections() {
+        return hostApplicationService.getNamesAndSurnames();
     }
 
     @Operation(summary = "Find host by ID", description = "Returns a specific host by its ID.")

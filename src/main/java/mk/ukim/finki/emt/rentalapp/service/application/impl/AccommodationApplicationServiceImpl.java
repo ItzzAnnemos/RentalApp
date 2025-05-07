@@ -5,10 +5,13 @@ import mk.ukim.finki.emt.rentalapp.dto.DisplayAccommodationDto;
 import mk.ukim.finki.emt.rentalapp.model.domain.Accommodation;
 import mk.ukim.finki.emt.rentalapp.model.domain.Host;
 import mk.ukim.finki.emt.rentalapp.model.enumerations.Category;
+import mk.ukim.finki.emt.rentalapp.model.views.AccommodationsPerHostView;
 import mk.ukim.finki.emt.rentalapp.service.application.AccommodationApplicationService;
 import mk.ukim.finki.emt.rentalapp.service.domain.AccommodationService;
 import mk.ukim.finki.emt.rentalapp.service.domain.HostService;
 import mk.ukim.finki.emt.rentalapp.service.specifications.FieldFilterSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +31,19 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     }
 
     @Override
-    public List<DisplayAccommodationDto> findAll(String name,
+    public List<DisplayAccommodationDto> findAll() {
+        return accommodationService.findAll().stream()
+                .map(DisplayAccommodationDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<DisplayAccommodationDto> findAll(String name,
                                                  Category category,
                                                  Long hostId,
                                                  Integer numRooms,
-                                                 Boolean isRented) {
+                                                 Boolean isRented,
+                                                 Pageable pageable) {
         Specification<Accommodation> spec = Specification.where(null);
 
         if (name != null) {
@@ -55,9 +66,8 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
             spec = spec.and(FieldFilterSpecification.filterEqualsV(Accommodation.class, "isRented", isRented));
         }
 
-        return accommodationService.findAll(spec).stream()
-                .map(DisplayAccommodationDto::from)
-                .collect(Collectors.toList());
+        return accommodationService.findAll(spec, pageable)
+                .map(DisplayAccommodationDto::from);
     }
 
     @Override
@@ -93,5 +103,10 @@ public class AccommodationApplicationServiceImpl implements AccommodationApplica
     @Override
     public void deleteById(Long id) {
         accommodationService.deleteById(id);
+    }
+
+    @Override
+    public List<AccommodationsPerHostView> getAccommodationsPerHost() {
+        return accommodationService.getAccommodationsPerHost();
     }
 }

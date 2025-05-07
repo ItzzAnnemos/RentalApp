@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Data
 @Entity
@@ -36,6 +37,9 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Host host;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
+
     public User() {
     }
 
@@ -52,7 +56,7 @@ public class User implements UserDetails {
         this.password = password;
         this.name = name;
         this.surname = surname;
-        this.role = Role.ROLE_USER;
+        this.role = Role.USER;
     }
 
     public User(UserDetails userDetails) {

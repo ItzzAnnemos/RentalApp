@@ -10,5 +10,5 @@ import java.util.List;
 
 @NoRepositoryBean
 public interface JpaSpecificationRepository<T, ID> extends JpaRepository<T, ID> {
-    List<T> findAll(Specification<T> filter);
+    Page<T> findAll(Specification<T> filter, Pageable page);
 }

@@ -1,4 +1,4 @@
-package mk.ukim.finki.emt.rentalapp.config;
+package mk.ukim.finki.emt.rentalapp.security;
 
 import mk.ukim.finki.emt.rentalapp.service.domain.UserService;
 import org.springframework.security.authentication.AuthenticationProvider;

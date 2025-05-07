@@ -1,4 +1,4 @@
-package mk.ukim.finki.emt.rentalapp.web;
+package mk.ukim.finki.emt.rentalapp.web.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

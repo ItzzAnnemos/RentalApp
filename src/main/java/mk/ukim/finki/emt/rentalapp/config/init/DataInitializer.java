@@ -1,4 +1,4 @@
-package mk.ukim.finki.emt.rentalapp.config;
+package mk.ukim.finki.emt.rentalapp.config.init;
 
 import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.emt.rentalapp.model.domain.*;
@@ -54,10 +54,10 @@ public class DataInitializer {
 
         users = new ArrayList<>();
         if (this.userRepository.count() == 0) {
-            User hostUser1 = new User("nikola.serafimov", passwordEncoder.encode("ns"), "Nikola", "Serafimov", Role.ROLE_HOST);
-            User hostUser2 = new User("felix.schneider", passwordEncoder.encode("fs"), "Felix", "Schneider", Role.ROLE_HOST);
-            User hostUser3 = new User("john.matthews", passwordEncoder.encode("jm"), "John", "Matthews", Role.ROLE_HOST);
-            User regularUser = new User("user", passwordEncoder.encode("user"), "User", "", Role.ROLE_USER);
+            User hostUser1 = new User("nikola.serafimov", passwordEncoder.encode("ns"), "Nikola", "Serafimov", Role.HOST);
+            User hostUser2 = new User("felix.schneider", passwordEncoder.encode("fs"), "Felix", "Schneider", Role.HOST);
+            User hostUser3 = new User("john.matthews", passwordEncoder.encode("jm"), "John", "Matthews", Role.HOST);
+            User regularUser = new User("user", passwordEncoder.encode("user"), "User", "", Role.USER);
             users = List.of(hostUser1, hostUser2, hostUser3, regularUser);
             this.userRepository.saveAll(users);
 
